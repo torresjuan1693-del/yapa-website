@@ -386,7 +386,7 @@
       margin-top: 1rem;
     }
 
-    /* ── Services — typographic list ── */
+    /* ── Services — accordion ── */
     #services {
       background: var(--bg);
       padding: 10rem 4rem;
@@ -400,6 +400,14 @@
 
     .service-line {
       border-bottom: 1px solid rgba(140, 136, 114, 0.4);
+      cursor: pointer;
+    }
+
+    .service-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
     }
 
     .service-text {
@@ -411,15 +419,45 @@
       display: block;
       padding: 0.8rem 0;
       letter-spacing: -0.03em;
-      transform-origin: left center;
-      transition: color 0.5s ease, transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      cursor: default;
+      transition: color 0.4s ease;
+      user-select: none;
     }
 
-    .service-line:hover .service-text {
+    .service-line:hover .service-text,
+    .service-line.is-open .service-text {
       color: var(--accent);
-      font-style: italic;
-      transform: scale(1.04);
+    }
+
+    .service-indicator {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+      font-weight: 300;
+      color: var(--accent);
+      flex-shrink: 0;
+      line-height: 1;
+      transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      user-select: none;
+    }
+
+    .service-line.is-open .service-indicator {
+      transform: rotate(45deg);
+    }
+
+    .service-panel {
+      height: 0;
+      overflow: hidden;
+      background: var(--off-white);
+    }
+
+    .service-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(0.88rem, 1.3vw, 1.05rem);
+      font-weight: 300;
+      line-height: 1.78;
+      color: var(--text);
+      letter-spacing: 0.01em;
+      padding: 2rem 2rem 2.5rem;
+      max-width: 54ch;
     }
 
     /* ── Innesto CTA ── */
@@ -816,6 +854,7 @@
       .value-entry { padding: 2rem 0; }
 
       .service-text { font-size: clamp(1.8rem, 11vw, 3rem); }
+      .service-desc { font-size: 0.9rem; padding: 1.5rem 1.5rem 2rem; }
 
       .innesto-cta-title { font-size: clamp(4rem, 18vw, 7rem); }
 
@@ -964,10 +1003,42 @@
   <section id="services">
     <span class="section-label">What we do</span>
     <ul class="services-list" role="list">
-      <li class="service-line" role="listitem"><span class="service-text">Brand Strategy</span></li>
-      <li class="service-line" role="listitem"><span class="service-text">Creative Direction</span></li>
-      <li class="service-line" role="listitem"><span class="service-text">Design Strategy</span></li>
-      <li class="service-line" role="listitem"><span class="service-text">Network &amp; Connections</span></li>
+      <li class="service-line" role="listitem">
+        <div class="service-header">
+          <span class="service-text">Brand Strategy</span>
+          <span class="service-indicator" aria-hidden="true">+</span>
+        </div>
+        <div class="service-panel">
+          <p class="service-desc">We help studios and brands define where they stand and where they're going. From positioning to market perspective — an informed point of view that turns vision into direction.</p>
+        </div>
+      </li>
+      <li class="service-line" role="listitem">
+        <div class="service-header">
+          <span class="service-text">Creative Direction</span>
+          <span class="service-indicator" aria-hidden="true">+</span>
+        </div>
+        <div class="service-panel">
+          <p class="service-desc">Visual narratives, curated collaborations, and creative oversight to shape collections, campaigns, and brand moments that say something.</p>
+        </div>
+      </li>
+      <li class="service-line" role="listitem">
+        <div class="service-header">
+          <span class="service-text">Design Strategy</span>
+          <span class="service-indicator" aria-hidden="true">+</span>
+        </div>
+        <div class="service-panel">
+          <p class="service-desc">We bridge the gap between creative vision and business reality. Understanding what a project actually needs — and building the clearest path to get there.</p>
+        </div>
+      </li>
+      <li class="service-line" role="listitem">
+        <div class="service-header">
+          <span class="service-text">Network &amp; Connections</span>
+          <span class="service-indicator" aria-hidden="true">+</span>
+        </div>
+        <div class="service-panel">
+          <p class="service-desc">Several years inside the design world built something more than experience. Direct access to a curated international network of studios, creatives, and brands — and the judgment to know when a connection is the right one.</p>
+        </div>
+      </li>
     </ul>
   </section>
 
@@ -1124,6 +1195,42 @@
           gsap.from('.service-line', { x: -32, duration: 0.9, stagger: 0.07, ease: 'power3.out' });
         },
       });
+
+      // ── Services accordion ──
+      (function () {
+        const lines = document.querySelectorAll('.service-line');
+        const hoverMedia = window.matchMedia('(hover: hover)');
+
+        function animateOpen(line) {
+          const panel = line.querySelector('.service-panel');
+          line.classList.add('is-open');
+          gsap.killTweensOf(panel);
+          gsap.to(panel, { height: 'auto', duration: 0.52, ease: 'power3.out' });
+        }
+
+        function animateClose(line) {
+          const panel = line.querySelector('.service-panel');
+          line.classList.remove('is-open');
+          gsap.killTweensOf(panel);
+          gsap.to(panel, { height: 0, duration: 0.38, ease: 'power3.inOut' });
+        }
+
+        lines.forEach(line => {
+          if (hoverMedia.matches) {
+            line.addEventListener('mouseenter', () => {
+              lines.forEach(l => { if (l !== line) animateClose(l); });
+              animateOpen(line);
+            });
+            line.addEventListener('mouseleave', () => animateClose(line));
+          } else {
+            line.addEventListener('click', () => {
+              const isOpen = line.classList.contains('is-open');
+              lines.forEach(l => animateClose(l));
+              if (!isOpen) animateOpen(line);
+            });
+          }
+        });
+      })();
 
       // ── Contact ──
       ScrollTrigger.create({
