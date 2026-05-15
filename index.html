@@ -822,12 +822,30 @@
       .nav-right { display: none; }
       .nav-hamburger { display: flex; }
 
-      #hero { padding: 0 2rem 5rem; }
+      #hero { padding: 5rem 2rem 4rem; justify-content: center; }
       .hero-plus-wrap { width: 60px; opacity: 0.12; }
 
       #yapa-meaning { padding: 6rem 2rem; }
-      #about, #values, #services, #contact { padding: 7rem 2rem; }
-      #innesto-cta { padding: 7rem 2rem; }
+      #about {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 5rem 2rem;
+      }
+      #values, #services { padding: 7rem 2rem; }
+      #innesto-cta {
+        min-height: 100vh;
+        padding: 3rem 2rem;
+      }
+      #contact {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 5rem 2rem;
+      }
 
       .contact-inner { grid-template-columns: 1fr; gap: 3.5rem; }
       .value-entry { padding: 2.5rem 0; }
@@ -840,14 +858,33 @@
     @media (max-width: 480px) {
       nav { padding: 1.4rem 1.5rem; }
 
-      #hero { padding: 0 1.5rem 4rem; }
+      #hero { padding: 5rem 1.5rem 3rem; justify-content: center; }
       .hero-plus-wrap { display: none; }
       .hero-title { font-size: clamp(3rem, 12vw, 4.5rem); }
       .sculpture { margin-top: 2rem; gap: 1.2rem; }
       .sculpture-rule { flex: 0 0 3rem; }
 
-      #yapa-meaning, #about, #values, #services, #contact { padding: 5rem 1.5rem; }
-      #innesto-cta { padding: 5rem 1.5rem; }
+      #yapa-meaning, #values, #services { padding: 5rem 1.5rem; }
+      #about {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 4rem 1.5rem;
+      }
+      .about-text { font-size: clamp(0.9rem, 3.5vw, 1.05rem); }
+      #innesto-cta {
+        min-height: 100vh;
+        padding: 3rem 1.5rem;
+      }
+      #contact {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 5rem 1.5rem 3rem;
+      }
 
       .values-header { margin-bottom: 3rem; }
       .value-entry { padding: 2rem 0; }
