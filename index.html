@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Yapa Agency — Human First. Creative Always.</title>
+  <meta name="description" content="Yapa is a Milan-based creative consultancy with an international network. We work with design studios, brands, and institutions.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://yapa.agency/">
+  <meta property="og:title"       content="Yapa Agency — Human First. Creative Always.">
+  <meta property="og:description" content="Yapa is a Milan-based creative consultancy with an international network. We work with design studios, brands, and institutions.">
+  <meta property="og:image"       content="https://yapa.agency/og-image.jpg">
+  <meta name="twitter:card"       content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #C4BFA8;
+      --text:      #1A1A1A;
+      --accent:    #8C8872;
+      --off-white: #F5F3EE;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: var(--off-white);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Cookie banner ── */
+    #cookie-banner {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 300;
+      background: var(--text);
+      color: var(--off-white);
+      padding: 1.4rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      transform: translateY(100%);
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    #cookie-banner.visible { transform: translateY(0); }
+
+    .cookie-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .cookie-text a { color: var(--accent); text-decoration: underline; }
+
+    #cookie-accept {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--off-white);
+      background: none;
+      border: 1px solid rgba(245, 243, 238, 0.35);
+      padding: 0.7rem 1.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+
+    #cookie-accept:hover { border-color: rgba(245, 243, 238, 0.8); background: rgba(245, 243, 238, 0.06); }
+
+    /* ── Intro overlay ── */
+    #intro {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--off-white);
+      pointer-events: none;
+    }
+
+    #intro-plus { width: clamp(100px, 18vw, 200px); height: clamp(100px, 18vw, 200px); }
+
+    #intro-plus-path {
+      fill: none;
+      stroke: var(--text);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+    }
+
+    #pour {
+      position: fixed;
+      inset: 0;
+      z-index: 190;
+      background: var(--bg);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      pointer-events: none;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.8rem 4rem;
+      opacity: 0;
+      background: rgba(245, 243, 238, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(140, 136, 114, 0.12);
+      transition: opacity 0.4s ease;
+    }
+
+    .nav-logo {
+      font-family: 'Comfortaa', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-right { display: flex; align-items: center; gap: 3rem; }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+    .nav-links a {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 3px;
+      cursor: pointer;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent);
+      transition: width 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links a:focus-visible::after { width: 100%; }
+    .nav-links a:focus-visible { outline: none; }
+
+    .nav-social { display: flex; align-items: center; gap: 1rem; }
+
+    .nav-social a {
+      display: flex;
+      color: var(--accent);
+      cursor: pointer;
+      transition: color 0.4s ease;
+    }
+
+    .nav-social a:hover { color: var(--text); }
+    .nav-social a:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+    .nav-social svg { width: 15px; height: 15px; fill: currentColor; }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 4rem 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero-pour {
+      position: absolute;
+      inset: 0;
+      background: var(--bg);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      z-index: 0;
+    }
+
+    .hero-plus-wrap {
+      width: clamp(80px, 14vw, 200px);
+      flex-shrink: 0;
+      z-index: 1;
+      cursor: default;
+      opacity: 0.18;
+      transition: opacity 0.9s ease;
+      align-self: center;
+    }
+
+    .hero-plus-wrap:hover { opacity: 0.75; }
+    .hero-plus-wrap svg { width: 100%; height: auto; display: block; }
+
+    #hero-plus-path { fill: none; stroke: var(--text); stroke-width: 3; stroke-linecap: round; }
+
+    .plus-liquid {
+      transform: scaleY(0);
+      transform-box: fill-box;
+      transform-origin: 50% 100%;
+      transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .hero-plus-wrap:hover .plus-liquid { transform: scaleY(1); }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: clamp(2rem, 4vw, 5rem);
+    }
+
+    .hero-content { flex: 1; min-width: 0; }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4.5rem, 11vw, 10rem);
+      font-weight: 300;
+      line-height: 0.88;
+      letter-spacing: -0.025em;
+      color: var(--text);
+    }
+
+    .hero-title .line { display: block; overflow: hidden; }
+    .hero-title .line-inner { display: block; transform: translateY(110%); }
+    .hero-title em { font-style: italic; color: var(--accent); }
+
+    .sculpture { display: flex; align-items: center; gap: 2rem; margin-top: 4rem; }
+
+    .sculpture-rule {
+      flex: 0 0 6rem;
+      height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+
+    .sculpture-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0;
+    }
+
+    /* ── Yapa meaning (full-height interlude) ── */
+    #yapa-meaning {
+      min-height: 100vh;
+      background: var(--off-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 4rem;
+    }
+
+    .meaning-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4.5vw, 4rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      max-width: 700px;
+      text-align: center;
+      color: var(--text);
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    /* ── Shared section label ── */
+    .section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 4rem;
+      display: block;
+    }
+
+    /* ── About ── */
+    #about {
+      background: var(--bg);
+      padding: 10rem 4rem;
+      text-align: center;
+    }
+
+    .about-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 1.6vw, 1.45rem);
+      font-weight: 300;
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+      max-width: 640px;
+      margin: 0 auto;
+      hyphens: none;
+      text-wrap: balance;
+    }
+
+    .about-text .reveal-line { display: block; overflow: hidden; }
+    .about-text .reveal-inner { display: block; transform: translateY(105%); }
+
+    /* ── Values ── */
+    #values {
+      background: var(--off-white);
+      padding: 10rem 4rem;
+    }
+
+    .values-header { margin-bottom: 5rem; }
+
+    .values-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4.5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      max-width: 720px;
+      margin-bottom: 1.2rem;
+    }
+
+    .values-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+
+    .values-list { margin-top: 5rem; }
+
+    .value-entry {
+      border-top: 1px solid rgba(140, 136, 114, 0.3);
+      padding: 3.5rem 0;
+    }
+
+    .value-entry:last-child { border-bottom: 1px solid rgba(140, 136, 114, 0.3); }
+
+    .value-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 3.5vw, 3.2rem);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .value-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(26, 26, 26, 0.65);
+      margin-top: 1rem;
+    }
+
+    /* ── Services — typographic list ── */
+    #services {
+      background: var(--bg);
+      padding: 10rem 4rem;
+    }
+
+    .services-list {
+      list-style: none;
+      border-top: 1px solid rgba(140, 136, 114, 0.4);
+      margin-top: 1rem;
+    }
+
+    .service-line {
+      border-bottom: 1px solid rgba(140, 136, 114, 0.4);
+    }
+
+    .service-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 8.5vw, 8.5rem);
+      font-weight: 300;
+      line-height: 1;
+      color: var(--text);
+      display: block;
+      padding: 0.8rem 0;
+      letter-spacing: -0.03em;
+      transform-origin: left center;
+      transition: color 0.5s ease, transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      cursor: default;
+    }
+
+    .service-line:hover .service-text {
+      color: var(--accent);
+      font-style: italic;
+      transform: scale(1.04);
+    }
+
+    /* ── Innesto CTA ── */
+    #innesto-cta {
+      background: var(--off-white);
+      padding: 10rem 4rem;
+      border-top: 1px solid rgba(140, 136, 114, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .innesto-cta-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 300;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 2rem;
+    }
+
+    .innesto-cta-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(5rem, 14vw, 13rem);
+      font-weight: 300;
+      line-height: 0.88;
+      letter-spacing: -0.035em;
+      color: var(--text);
+      margin-bottom: 3.5rem;
+    }
+
+    .innesto-cta-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: color 0.4s ease;
+    }
+
+    .innesto-cta-link:hover { color: var(--text); }
+
+    .innesto-arrow {
+      display: inline-block;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .innesto-cta-link:hover .innesto-arrow {
+      transform: translateX(0.6rem);
+    }
+
+    /* ── Contact ── */
+    #contact {
+      background: var(--off-white);
+      padding: 12rem 4rem;
+    }
+
+    .contact-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8rem;
+      align-items: start;
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .contact-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 300;
+      font-style: normal;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.2rem;
+    }
+
+    .contact-subtitle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--accent);
+      letter-spacing: 0.06em;
+    }
+
+    .contact-form {
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(140, 136, 114, 0.4);
+      padding-bottom: 0.4rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group:focus-within { border-color: var(--text); }
+
+    .form-group label {
+      display: block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 300;
+      color: var(--text);
+      padding: 0.2rem 0;
+      resize: none;
+      line-height: 1.4;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(140, 136, 114, 0.5);
+      font-style: italic;
+    }
+
+    .form-submit {
+      margin-top: 0.5rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--off-white);
+      background: var(--text);
+      border: 1px solid var(--text);
+      padding: 1rem 2.8rem;
+      cursor: pointer;
+      transition: background 0.5s ease, border-color 0.5s ease;
+    }
+
+    .form-submit:hover { background: var(--accent); border-color: var(--accent); }
+
+    .form-success {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--accent);
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .contact-direct {
+      margin-top: 2.5rem;
+    }
+
+    .contact-direct-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+
+    .contact-email {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      text-decoration: none;
+      position: relative;
+      padding-bottom: 2px;
+      cursor: pointer;
+    }
+
+    .contact-email::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 0; height: 1px;
+      background: var(--text);
+      transition: width 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .contact-email:hover::after,
+    .contact-email:focus-visible::after { width: 100%; }
+    .contact-email:focus-visible { outline: none; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--bg);
+      padding: 2rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .footer-line {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+
+    .footer-brand {
+      font-family: 'Comfortaa', cursive;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .footer-brand em { font-style: normal; color: var(--accent); }
+
+    .footer-line a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    .footer-line a:hover { border-color: var(--accent); }
+
+    .footer-social { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+
+    .footer-social a {
+      display: flex;
+      color: var(--accent);
+      transition: color 0.4s ease;
+    }
+
+    .footer-social a:hover { color: var(--text); }
+    .footer-social svg { width: 14px; height: 14px; fill: currentColor; }
+
+    /* ── Hamburger button ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 22px;
+      height: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 100%;
+      height: 1.5px;
+      background: var(--text);
+      border-radius: 1px;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7.25px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7.25px) rotate(-45deg); }
+
+    /* ── Mobile menu overlay ── */
+    #mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 45;
+      background: var(--off-white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    #mobile-menu.open { opacity: 1; pointer-events: auto; }
+
+    .mobile-nav-links {
+      list-style: none;
+      text-align: center;
+    }
+
+    .mobile-nav-links li + li { margin-top: 1.8rem; }
+
+    .mobile-nav-links li {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    #mobile-menu.open .mobile-nav-links li          { opacity: 1; transform: translateY(0); }
+    #mobile-menu.open .mobile-nav-links li:nth-child(1) { transition-delay: 0.05s; }
+    #mobile-menu.open .mobile-nav-links li:nth-child(2) { transition-delay: 0.10s; }
+    #mobile-menu.open .mobile-nav-links li:nth-child(3) { transition-delay: 0.15s; }
+    #mobile-menu.open .mobile-nav-links li:nth-child(4) { transition-delay: 0.20s; }
+
+    .mobile-nav-links a {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 13vw, 4.5rem);
+      font-weight: 300;
+      letter-spacing: -0.025em;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+      transition: color 0.3s ease, font-style 0.3s ease;
+    }
+
+    .mobile-nav-links a:hover { color: var(--accent); font-style: italic; }
+
+    .mobile-nav-social { display: flex; gap: 1.8rem; }
+
+    .mobile-nav-social a {
+      display: flex;
+      color: var(--accent);
+      transition: color 0.4s ease;
+    }
+
+    .mobile-nav-social a:hover { color: var(--text); }
+    .mobile-nav-social svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      #intro { display: none; }
+      nav { opacity: 1; }
+      .sculpture-text { opacity: 1; }
+      .hero-title .line-inner { transform: none; }
+      .sculpture-rule { transform: none; }
+      .about-text .reveal-inner { transform: none; }
+      .meaning-text { opacity: 1; transform: none; }
+      .mobile-nav-links li { opacity: 1; transform: none; }
+    }
+
+    /* ── Responsive — 1024px (iPad landscape) ── */
+    @media (max-width: 1024px) {
+      nav { padding: 1.6rem 3rem; }
+      #hero { padding: 0 3rem 5rem; }
+      #yapa-meaning, #about, #values, #services, #contact { padding: 8rem 3rem; }
+      #innesto-cta { padding: 8rem 3rem; }
+      footer { padding: 2rem 3rem; }
+      #cookie-banner { padding: 1.2rem 3rem; }
+    }
+
+    /* ── Responsive — 768px (iPad portrait / large mobile) ── */
+    @media (max-width: 768px) {
+      nav { padding: 1.5rem 2rem; }
+      .nav-right { display: none; }
+      .nav-hamburger { display: flex; }
+
+      #hero { padding: 0 2rem 5rem; }
+      .hero-plus-wrap { width: 60px; opacity: 0.12; }
+
+      #yapa-meaning { padding: 6rem 2rem; }
+      #about, #values, #services, #contact { padding: 7rem 2rem; }
+      #innesto-cta { padding: 7rem 2rem; }
+
+      .contact-inner { grid-template-columns: 1fr; gap: 3.5rem; }
+      .value-entry { padding: 2.5rem 0; }
+
+      footer { padding: 2rem; }
+      #cookie-banner { padding: 1.2rem 2rem; flex-direction: column; gap: 1rem; align-items: flex-start; }
+    }
+
+    /* ── Responsive — 480px (iPhone) ── */
+    @media (max-width: 480px) {
+      nav { padding: 1.4rem 1.5rem; }
+
+      #hero { padding: 0 1.5rem 4rem; }
+      .hero-plus-wrap { display: none; }
+      .hero-title { font-size: clamp(3rem, 12vw, 4.5rem); }
+      .sculpture { margin-top: 2rem; gap: 1.2rem; }
+      .sculpture-rule { flex: 0 0 3rem; }
+
+      #yapa-meaning, #about, #values, #services, #contact { padding: 5rem 1.5rem; }
+      #innesto-cta { padding: 5rem 1.5rem; }
+
+      .values-header { margin-bottom: 3rem; }
+      .value-entry { padding: 2rem 0; }
+
+      .service-text { font-size: clamp(1.8rem, 11vw, 3rem); }
+
+      .innesto-cta-title { font-size: clamp(4rem, 18vw, 7rem); }
+
+      .contact-inner { gap: 2.5rem; }
+
+      footer { padding: 1.8rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .footer-line { font-size: 0.65rem; }
+
+      #cookie-banner { padding: 1.2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Cookie Banner ── -->
+  <div id="cookie-banner" role="region" aria-label="Cookie consent">
+    <p class="cookie-text">
+      We use cookies to improve your experience. By continuing you agree to our
+      <a href="privacy.html">Privacy Policy</a>.
+    </p>
+    <button id="cookie-accept">Accept</button>
+  </div>
+
+  <!-- ── Intro overlay ── -->
+  <div id="intro" aria-hidden="true">
+    <svg id="intro-plus" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path id="intro-plus-path" d="M50 12 L50 88 M12 50 L88 50"/>
+    </svg>
+  </div>
+  <div id="pour" aria-hidden="true"></div>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <a href="/" class="nav-logo" aria-label="Yapa — back to home">Yapa<span aria-hidden="true">+</span></a>
+    <div class="nav-right">
+      <ul class="nav-links" role="list">
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="innesto.html">Innesto</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-social">
+        <a href="https://www.linkedin.com/in/juan-torres-design/" target="_blank" rel="noopener noreferrer" aria-label="Yapa on LinkedIn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/yapaagency/" target="_blank" rel="noopener noreferrer" aria-label="Yapa on Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+      </div>
+    </div>
+    <button class="nav-hamburger" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── Mobile Menu ── -->
+  <div id="mobile-menu" aria-hidden="true">
+    <ul class="mobile-nav-links" role="list">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="innesto.html">Innesto</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="mobile-nav-social">
+      <a href="https://www.linkedin.com/in/juan-torres-design/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/yapaagency/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <div id="hero-pour" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="line"><span class="line-inner">Human</span></span>
+          <span class="line"><span class="line-inner">First.</span></span>
+          <span class="line"><span class="line-inner"><em>Creative</em></span></span>
+          <span class="line"><span class="line-inner">Always.</span></span>
+        </h1>
+        <div class="sculpture">
+          <span class="sculpture-rule" aria-hidden="true"></span>
+          <p class="sculpture-text">Always a little more.</p>
+        </div>
+      </div>
+
+      <div class="hero-plus-wrap" aria-hidden="true">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="plus-clip">
+              <rect x="43" y="12" width="14" height="76"/>
+              <rect x="12" y="43" width="76" height="14"/>
+            </clipPath>
+          </defs>
+          <rect class="plus-liquid" x="0" y="0" width="100" height="100" fill="#8C8872" clip-path="url(#plus-clip)"/>
+          <path id="hero-plus-path" d="M50 12 L50 88 M12 50 L88 50" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Yapa meaning ── -->
+  <section id="yapa-meaning" aria-label="What Yapa means">
+    <p class="meaning-text">Yapa is a word used across South America. It means a little extra — something&nbsp;more than expected. That's how we work.</p>
+  </section>
+
+  <!-- ── About ── -->
+  <section id="about">
+    <span class="section-label">About</span>
+    <p class="about-text">
+      <span class="reveal-line"><span class="reveal-inner">Milan&#8209;based creative consultancy with an international network.</span></span>
+      <span class="reveal-line"><span class="reveal-inner">We work with design studios, brands, and institutions —</span></span>
+      <span class="reveal-line"><span class="reveal-inner">bringing strategy, connections, and creative direction to every project.</span></span>
+      <span class="reveal-line"><span class="reveal-inner">Between brief and delivery — close enough to understand both sides, experienced enough to get it right.</span></span>
+    </p>
+  </section>
+
+  <!-- ── Values ── -->
+  <section id="values">
+    <div class="values-header">
+      <h2 class="values-title">Not a directory.<br>A trusted relationship.</h2>
+      <p class="values-subtitle">Three things that define every project we take on.</p>
+    </div>
+    <div class="values-list">
+      <div class="value-entry">
+        <h3 class="value-name">Curation</h3>
+        <p class="value-desc">We don't scroll through contacts. Every introduction we make is deliberate — based on knowing who you are, what your project needs, and who in our network can actually deliver.</p>
+      </div>
+      <div class="value-entry">
+        <h3 class="value-name">Trust</h3>
+        <p class="value-desc">Our network is built on years of working side by side, not on a list. The people we connect you with know us, and know we don't make introductions lightly.</p>
+      </div>
+      <div class="value-entry">
+        <h3 class="value-name">Execution</h3>
+        <p class="value-desc">Strategy without follow-through is just a document. We stay close to a project from brief to delivery, making sure decisions made at the table translate into results on the ground.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Services ── -->
+  <section id="services">
+    <span class="section-label">What we do</span>
+    <ul class="services-list" role="list">
+      <li class="service-line" role="listitem"><span class="service-text">Brand Strategy</span></li>
+      <li class="service-line" role="listitem"><span class="service-text">Creative Direction</span></li>
+      <li class="service-line" role="listitem"><span class="service-text">Design Strategy</span></li>
+      <li class="service-line" role="listitem"><span class="service-text">Network &amp; Connections</span></li>
+    </ul>
+  </section>
+
+  <!-- ── Innesto CTA ── -->
+  <section id="innesto-cta">
+    <span class="innesto-cta-label">A cultural project by Yapa</span>
+    <h2 class="innesto-cta-title">Innesto</h2>
+    <a href="innesto.html" class="innesto-cta-link">Discover more <span class="innesto-arrow">→</span></a>
+  </section>
+
+  <!-- ── Contact ── -->
+  <section id="contact">
+    <div class="contact-inner">
+      <div class="contact-left">
+        <h2 class="contact-title">Let's work together.</h2>
+        <p class="contact-subtitle">Tell us about your project.</p>
+        <div class="contact-direct">
+          <a href="mailto:hello@yapa.agency" class="contact-email">hello@yapa.agency</a>
+        </div>
+      </div>
+      <div class="contact-right">
+        <form class="contact-form" id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact">
+          <input type="hidden" name="subject" value="New message — Yapa website">
+          <p style="display:none" aria-hidden="true"><label>Do not fill: <input name="bot-field"></label></p>
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your name">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="5" required placeholder="Tell us about your project..."></textarea>
+          </div>
+          <button type="submit" class="form-submit">Send</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <p class="footer-line">
+      <span class="footer-brand">Yapa<em>+</em></span>
+      &nbsp;·&nbsp;© 2026 Yapa Agency, Milano
+      &nbsp;·&nbsp;<a href="privacy.html">Privacy Policy</a>
+      &nbsp;·&nbsp;VAT IT13288320966
+    </p>
+    <div class="footer-social">
+      <a href="https://www.linkedin.com/in/juan-torres-design/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/yapaagency/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── Cookie consent ──
+    const cookieBanner = document.getElementById('cookie-banner');
+    if (!localStorage.getItem('yapa-cookies-ok')) {
+      setTimeout(() => cookieBanner.classList.add('visible'), 2800);
+    }
+    document.getElementById('cookie-accept').addEventListener('click', () => {
+      localStorage.setItem('yapa-cookies-ok', '1');
+      cookieBanner.classList.remove('visible');
+    });
+
+    // ── Contact form ──
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const data = new URLSearchParams(new FormData(contactForm)).toString();
+        try {
+          await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: data });
+        } catch (_) {}
+        contactForm.innerHTML = '<p class="form-success">Thank you. We\'ll be in touch soon.</p>';
+      });
+    }
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReduced) {
+      // ── Lenis ──
+      const lenis = new Lenis({
+        duration: 1.9,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+      });
+
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(time => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+
+      // ── SVG path lengths ──
+      ['intro-plus-path', 'hero-plus-path'].forEach(id => {
+        const p = document.getElementById(id);
+        if (!p) return;
+        const len = p.getTotalLength();
+        p.style.strokeDasharray = len;
+        p.style.strokeDashoffset = len;
+      });
+
+      // ── Intro sequence ──
+      gsap.timeline({ defaults: { ease: 'power3.inOut' } })
+        .to('#intro-plus-path', { strokeDashoffset: 0, duration: 1.6, ease: 'power2.out' })
+        .to('#pour',      { scaleY: 1, duration: 1.2, ease: 'power2.inOut' }, '-=0.3')
+        .to('#hero-pour', { scaleY: 1, duration: 1.2, ease: 'power2.inOut' }, '<')
+        .to('#intro',     { yPercent: -100, duration: 1.0, ease: 'power2.inOut' }, '-=0.2')
+        .to('#pour',      { yPercent: -100, duration: 1.0, ease: 'power2.inOut' }, '<')
+        .to('nav',        { opacity: 1, duration: 0.7 }, '-=0.3')
+        .to('.hero-title .line-inner', { y: '0%', duration: 1.3, stagger: 0.1, ease: 'power4.out' }, '-=0.5')
+        .to('#hero-plus-path', { strokeDashoffset: 0, duration: 2, ease: 'power2.out' }, '-=1.2')
+        .to('.sculpture-rule', { scaleX: 1, duration: 1.1, ease: 'power3.out' }, '-=0.8')
+        .to('.sculpture-text', { opacity: 1, duration: 0.8 }, '-=0.6');
+
+      // ── Yapa meaning — fade + rise on scroll ──
+      gsap.to('.meaning-text', {
+        opacity: 1, y: 0, duration: 1.6, ease: 'power3.out',
+        scrollTrigger: { trigger: '#yapa-meaning', start: 'top 65%', once: true },
+      });
+
+      // ── About text reveal ──
+      gsap.utils.toArray('.reveal-inner').forEach(el => {
+        gsap.to(el, {
+          y: '0%', duration: 1.3, ease: 'power3.out',
+          scrollTrigger: { trigger: el.closest('.reveal-line'), start: 'top 88%', once: true },
+        });
+      });
+
+      // ── Values — fire on enter, no immediateRender ──
+      ScrollTrigger.create({
+        trigger: '.values-list',
+        start: 'top 85%',
+        once: true,
+        onEnter: () => {
+          gsap.from('.value-entry', { opacity: 0, y: 28, duration: 1, stagger: 0.14, ease: 'power3.out' });
+        },
+      });
+
+      // ── Services — fire on enter (avoids blank white bug) ──
+      ScrollTrigger.create({
+        trigger: '.services-list',
+        start: 'top 88%',
+        once: true,
+        onEnter: () => {
+          gsap.from('.service-line', { x: -32, duration: 0.9, stagger: 0.07, ease: 'power3.out' });
+        },
+      });
+
+      // ── Contact ──
+      ScrollTrigger.create({
+        trigger: '#contact',
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          gsap.from('.contact-title', { opacity: 0, y: 50, duration: 1.4, ease: 'power3.out' });
+          gsap.from('.contact-form',  { opacity: 0, y: 36, duration: 1.2, ease: 'power3.out', delay: 0.2 });
+        },
+      });
+
+      // ── Nav hide/show on scroll ──
+      let lastY = 0;
+      lenis.on('scroll', ({ scroll }) => {
+        const nav = document.querySelector('nav');
+        if (scroll > lastY && scroll > 120) {
+          nav.style.opacity = '0';
+          nav.style.pointerEvents = 'none';
+        } else {
+          nav.style.opacity = '1';
+          nav.style.pointerEvents = 'auto';
+        }
+        lastY = scroll;
+      });
+
+    } else {
+      document.querySelector('nav').style.opacity = '1';
+    }
+
+    // ── Mobile menu toggle ──
+    const hamburger = document.querySelector('.nav-hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburger.addEventListener('click', () => {
+      const isOpen = hamburger.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen);
+      mobileMenu.classList.toggle('open', isOpen);
+      mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.classList.remove('open');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      });
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+        mobileMenu.classList.remove('open');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Innesto — A Cultural Project by Yapa</title>
+  <meta name="description" content="Innesto is a nomad format that brings emerging product and collectible designers into the spaces of the city. A cultural project by Yapa.">
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://yapa.agency/innesto.html">
+  <meta property="og:title"       content="Innesto — A Cultural Project by Yapa">
+  <meta property="og:description" content="A nomad format that brings emerging product and collectible designers into the spaces of the city.">
+  <meta name="twitter:card"       content="summary_large_image">
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #1A1814;
+      --carta:  #F5F0E8;
+      --avorio: #C8B89A;
+      --seppia: #8C8070;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      background: var(--carta);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Word scatter overlay ── */
+    #word-scatter {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: var(--carta);
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .scatter-word {
+      position: absolute;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      line-height: 1;
+      white-space: nowrap;
+      transform-origin: center center;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.8rem 4rem;
+      opacity: 0;
+      background: rgba(245, 240, 232, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(140, 128, 112, 0.12);
+      transition: opacity 0.4s ease;
+    }
+
+    .nav-logo {
+      font-family: 'Comfortaa', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+    }
+
+    .nav-logo span { color: var(--seppia); }
+
+    .nav-back {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 400;
+      color: var(--seppia);
+      text-decoration: none;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: color 0.3s ease;
+    }
+
+    .nav-back:hover { color: var(--ink); }
+    .nav-back:focus-visible { outline: 1px solid var(--seppia); outline-offset: 3px; }
+
+    /* ── Hero ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10rem 4rem 8rem;
+      text-align: center;
+    }
+
+    #innesto-eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--seppia);
+      margin-bottom: 4rem;
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    #innesto-logo-wrap {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+
+    #innesto-logo-wrap img {
+      max-width: 600px;
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    #innesto-desc {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.9;
+      max-width: 560px;
+      margin-top: 5rem;
+      color: rgba(26, 24, 20, 0.68);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    /* ── Instagram ── */
+    #instagram {
+      background: var(--carta);
+      padding: 8rem 4rem 10rem;
+      text-align: center;
+      border-top: 1px solid rgba(140, 128, 112, 0.18);
+    }
+
+    .instagram-handle {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--seppia);
+      display: block;
+      margin-bottom: 2rem;
+    }
+
+    .instagram-cta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--seppia);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      transition: color 0.4s ease;
+    }
+
+    .instagram-cta:hover { color: var(--ink); }
+
+    .insta-arrow {
+      display: inline-block;
+      transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .instagram-cta:hover .insta-arrow { transform: translateX(0.6rem); }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--ink);
+      padding: 2.5rem 4rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .footer-innesto {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: rgba(245, 240, 232, 0.35);
+    }
+
+    .footer-yapa-link {
+      font-family: 'Comfortaa', cursive;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: rgba(245, 240, 232, 0.55);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+      transition: color 0.35s ease;
+    }
+
+    .footer-yapa-link span { color: var(--seppia); }
+    .footer-yapa-link:hover { color: var(--carta); }
+    .footer-yapa-link:focus-visible { outline: 1px solid var(--seppia); outline-offset: 3px; }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      #word-scatter { display: none; }
+      nav { opacity: 1; }
+      #innesto-eyebrow,
+      #innesto-logo-wrap,
+      #innesto-desc { opacity: 1; transform: none; }
+    }
+
+    /* ── Responsive — 1024px ── */
+    @media (max-width: 1024px) {
+      nav { padding: 1.6rem 3rem; }
+      #hero { padding: 9rem 3rem 7rem; }
+      #instagram { padding: 7rem 3rem 9rem; }
+      footer { padding: 2rem 3rem; }
+    }
+
+    /* ── Responsive — 768px ── */
+    @media (max-width: 768px) {
+      nav { padding: 1.5rem 2rem; }
+      #hero { padding: 8rem 2rem 6rem; }
+      #innesto-logo-wrap img { max-width: 460px; }
+      #innesto-desc { font-size: 0.9rem; max-width: 100%; }
+      #instagram { padding: 6rem 2rem 8rem; }
+      footer { padding: 2rem; }
+    }
+
+    /* ── Responsive — 480px ── */
+    @media (max-width: 480px) {
+      nav { padding: 1.4rem 1.5rem; }
+      .nav-back { font-size: 0.62rem; letter-spacing: 0.1em; }
+      #hero { padding: 7rem 1.5rem 5rem; }
+      #innesto-eyebrow { margin-bottom: 2.5rem; font-size: 0.58rem; }
+      #innesto-logo-wrap img { max-width: 100%; }
+      #innesto-desc { font-size: 0.88rem; line-height: 1.8; margin-top: 3rem; }
+      #instagram { padding: 4rem 1.5rem 6rem; }
+      footer { padding: 1.8rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Word scatter overlay ── -->
+  <div id="word-scatter" aria-hidden="true"></div>
+
+  <!-- ── Navigation ── -->
+  <nav>
+    <a href="/" class="nav-logo" aria-label="Yapa — back to home">Yapa<span aria-hidden="true">+</span></a>
+    <a href="/" class="nav-back">&#8592; Back to Yapa</a>
+  </nav>
+
+  <!-- ── Hero ── -->
+  <section id="hero">
+    <p id="innesto-eyebrow">A cultural project by Yapa</p>
+
+    <div id="innesto-logo-wrap">
+      <img src="innesto-logo.svg.svg" alt="Innesto">
+    </div>
+
+    <p id="innesto-desc">Innesto is a nomad format that brings designers, artists, brands and creatives into the spaces of the city. Not a gallery, not a fair — an innesto. The work meets the people who inhabit it, in living, informal, unexpected environments. Each edition is a curated selection by Yapa: chosen for the rigour of their process and the strength of the piece.</p>
+  </section>
+
+  <!-- ── Instagram ── -->
+  <section id="instagram">
+    <span class="instagram-handle">@_innesto_</span>
+    <a href="https://www.instagram.com/_innesto_/" target="_blank" rel="noopener noreferrer" class="instagram-cta">
+      Follow us on Instagram <span class="insta-arrow">→</span>
+    </a>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <p class="footer-innesto">Innesto &nbsp;·&nbsp; A Yapa project &nbsp;·&nbsp; Milano</p>
+    <a href="/" class="footer-yapa-link" aria-label="Back to Yapa">Yapa<span aria-hidden="true">+</span></a>
+  </footer>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ── Word scatter ──
+    const WORDS = [
+      'Ceramics','Brass','Resin','Glass','Textile','Wood','Cast iron','Pigment',
+      'Wax','Paper','Bronze','Terrazzo','Marble','Ink','Linen','Aluminium','Steel','Fabric',
+      'Barona','Isola','Porta Venezia','Navigli','Copenhagen','Tokyo','Dubai',
+      'Abu Dhabi','Mexico','Berlin','Shanghai',
+      'Process','Form','Exhibition','Studio','Dialogue','Craft','Residency',
+      'Collective','Edition','Archive','Making','Gesture','Detail','Artifact',
+      'Visual','Impact','Social','Debate','New Wave'
+    ];
+
+    function buildScatter() {
+      const container = document.getElementById('word-scatter');
+
+      // Pool includes some deliberate repeats for density
+      const pool = [...WORDS, ...WORDS.slice(0, 14)].sort(() => Math.random() - 0.5);
+
+      // Anchor positions that guarantee all four corners + edges are reached
+      const anchors = [
+        { left:  2, top:  2 }, { left: 16, top:  2 }, { left: 48, top:  1 },
+        { left: 78, top:  2 }, { left: 96, top:  2 },
+        { left:  1, top: 25 }, { left:  1, top: 52 }, { left:  1, top: 78 },
+        { left: 97, top: 22 }, { left: 98, top: 54 }, { left: 97, top: 80 },
+        { left:  3, top: 96 }, { left: 30, top: 97 }, { left: 62, top: 96 }, { left: 95, top: 95 },
+      ];
+
+      const TOTAL = 36;
+      const positions = anchors.map(a => ({
+        left: a.left + (Math.random() - 0.5) * 5,
+        top:  a.top  + (Math.random() - 0.5) * 4,
+      }));
+
+      while (positions.length < TOTAL) {
+        positions.push({
+          left: Math.random() * 94 + 3,
+          top:  Math.random() * 88 + 6,
+        });
+      }
+
+      positions.sort(() => Math.random() - 0.5);
+
+      const weights = [300, 400, 500];
+
+      positions.forEach((pos, i) => {
+        const el = document.createElement('span');
+        el.className = 'scatter-word';
+        el.textContent = pool[i % pool.length];
+
+        const weight  = weights[Math.floor(Math.random() * 3)];
+        const size    = (Math.random() * 3.2 + 0.55).toFixed(2);
+        const rot     = ((Math.random() - 0.5) * 22).toFixed(1);
+        const opacity = (Math.random() * 0.30 + 0.09).toFixed(2);
+
+        el.style.cssText = `
+          font-size:${size}rem;
+          font-weight:${weight};
+          left:${pos.left.toFixed(1)}%;
+          top:${pos.top.toFixed(1)}%;
+          transform:translate(-50%,-50%) rotate(${rot}deg);
+          opacity:${opacity};
+        `;
+
+        container.appendChild(el);
+      });
+    }
+
+    function runIntro() {
+      const tl = gsap.timeline();
+
+      // Stagger words in
+      tl.from('.scatter-word', {
+        opacity: 0,
+        scale: 0.85,
+        duration: 0.7,
+        stagger: { amount: 0.55, from: 'random' },
+        ease: 'power2.out'
+      })
+      // Dissolve out after a pause
+      .to('.scatter-word', {
+        opacity: 0,
+        duration: 0.9,
+        stagger: { amount: 0.45, from: 'random' },
+        ease: 'power2.in'
+      }, '+=1.1')
+      .call(() => {
+        const scatter = document.getElementById('word-scatter');
+        scatter.style.display = 'none';
+      })
+      // Reveal nav + hero
+      .to('nav', { opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.3')
+      .to('#innesto-eyebrow',   { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out' }, '-=0.4')
+      .to('#innesto-logo-wrap', { opacity: 1, y: 0, duration: 1.3, ease: 'power3.out' }, '-=0.6')
+      .to('#innesto-desc',      { opacity: 1, y: 0, duration: 1.1, ease: 'power3.out' }, '-=0.7');
+    }
+
+    if (!prefersReduced) {
+      buildScatter();
+
+      const lenis = new Lenis({
+        duration: 1.9,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
+      });
+
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(time => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+
+      runIntro();
+
+      // Instagram section
+      ScrollTrigger.create({
+        trigger: '#instagram',
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          gsap.from('.instagram-handle', { opacity: 0, y: 12, duration: 0.9, ease: 'power3.out' });
+          gsap.from('.instagram-cta',    { opacity: 0, y: 10, duration: 0.8, ease: 'power3.out', delay: 0.2 });
+        },
+      });
+
+      // Nav hide/show
+      let lastY = 0;
+      lenis.on('scroll', ({ scroll }) => {
+        const nav = document.querySelector('nav');
+        if (scroll > lastY && scroll > 120) {
+          nav.style.opacity = '0';
+          nav.style.pointerEvents = 'none';
+        } else {
+          nav.style.opacity = '1';
+          nav.style.pointerEvents = 'auto';
+        }
+        lastY = scroll;
+      });
+
+    } else {
+      document.querySelector('nav').style.opacity = '1';
+    }
+  </script>
+</body>
+</html>
