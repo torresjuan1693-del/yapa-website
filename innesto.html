@@ -17,7 +17,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 
-  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
@@ -411,16 +410,6 @@
     if (!prefersReduced) {
       buildScatter();
 
-      const lenis = new Lenis({
-        lerp: 0.08,
-        wheelMultiplier: 1.2,
-        smoothWheel: true,
-      });
-
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add(time => lenis.raf(time * 1000));
-      gsap.ticker.lagSmoothing(0);
-
       runIntro();
 
       // Instagram section
@@ -436,17 +425,18 @@
 
       // Nav hide/show
       let lastY = 0;
-      lenis.on('scroll', ({ scroll }) => {
+      window.addEventListener('scroll', () => {
         const nav = document.querySelector('nav');
-        if (scroll > lastY && scroll > 120) {
+        const scrollY = window.scrollY;
+        if (scrollY > lastY && scrollY > 120) {
           nav.style.opacity = '0';
           nav.style.pointerEvents = 'none';
         } else {
           nav.style.opacity = '1';
           nav.style.pointerEvents = 'auto';
         }
-        lastY = scroll;
-      });
+        lastY = scrollY;
+      }, { passive: true });
 
     } else {
       document.querySelector('nav').style.opacity = '1';
